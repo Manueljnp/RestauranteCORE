@@ -1,0 +1,59 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ML.Restaurante
+@{
+}
+<h2>Agregar Restaurante</h2>
+@using(Html.BeginForm("Form", "Restaurante", FormMethod.Post, new
+{
+    @enctype = "multipart/form-data",
+    @onsubmit = "validarFormulario(event)"
+}))
+{
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(model => model.IdRestaurante)
+    @Html.HiddenFor(model => model.Imagen)
+
+    <div class="card p-3 bg-light shadow-sm">
+        <div class="row">
+            <div class="col">
+                @Html.LabelFor(model => model.Nombre, new{ @class = "form-label text-dark fw-bold"})
+                @Html.TextBoxFor(model => model.Nombre, new{ @class = "form-control rounded-pill", @id = "inptNombre"})
+            </div>
+            <div class="col">
+                @Html.LabelFor(model => model.Eslogan, new { @class = "form-label text-dark fw-bold" })
+                @Html.TextBoxFor(model => model.Eslogan, new { @class = "form-control rounded-pill", @id = "inptEslogan"})
+            </div>
+            <div class="col">
+                @Html.LabelFor(model => model.Descripcion, new { @class = "form-label text-dark fw-bold" })
+                @Html.TextBoxFor(model => model.Descripcion, new { @class = "form-control rounded-pill", @id="inptDescripcion"})
+            </div>
+            <div class="col">
+                <label class="form-label text-dark fw-bold">Imagen del Producto</label>
+                <input type="file" accept=".png" name="inptFileImagen" id="inptFileImagen" class="form-control" onchange="validarExtension(); visualizarImagen(this);" />
+            </div>
+        </div>
+    </div>
+
+    <p></p>
+    <h3>Imagen del Restaurante</h3>
+    <div class="mb-3 mt-3 col">
+        @if (Model.Imagen == null)
+        {
+            <img id="imgRestaurante" src="https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg" width="150" height="150" />
+        }
+        else
+        {
+            <img src="@($"data:image/jpeg;base64,{Convert.ToBase64String(Model.Imagen)}")" width="150" height="150" />
+        }
+    </div>
+
+    <div>
+        <p></p>
+        <button type="submit" class="btn btn-primary mb-2" name="btnAgregarRegistro" id="btnAgregarRegistro">Agregar Registro</button>
+    </div>
+}
+
+<script src="~/js/ValidacionesFormulario.js"></script>
