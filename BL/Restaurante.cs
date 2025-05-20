@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using DL;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,43 +11,47 @@ using System.Threading.Tasks;
 
 namespace BL
 {
-    public class Restaurante
+    public class Restaurante : IRestaurante
     {
-        public static ML.Result GetAll()
+
+        private readonly RestauranteCoreContext _connection;
+        public Restaurante(RestauranteCoreContext connection)
+        {
+            _connection = connection;
+        }
+
+        public ML.Result GetAll()
         {
             ML.Result result = new ML.Result();
 
             try
             {
-                using (DL.RestauranteCoreContext context = new DL.RestauranteCoreContext())
+                //FromSqlRaw => SELECT
+                //ExecuteSqlRaw => INSERT, UPDATE, DELETE
+
+                var query = _connection.RestauranteGetAllSP.FromSqlRaw($"RestauranteGetAll").ToList();
+
+                if (query.Count > 0)
                 {
-                    //FromSqlRaw => SELECT
-                    //ExecuteSqlRaw => INSERT, UPDATE, DELETE
+                    result.Objects = new List<object>();
 
-                    var query = context.RestauranteGetAllSP.FromSqlRaw($"RestauranteGetAll").ToList();
-
-                    if(query.Count > 0)
+                    foreach (var item in query)
                     {
-                        result.Objects = new List<object>();
+                        ML.Restaurante restaurante = new ML.Restaurante();
 
-                        foreach (var item in query)
-                        {
-                            ML.Restaurante restaurante = new ML.Restaurante ();
+                        restaurante.IdRestaurante = item.IdRestaurante;
+                        restaurante.Nombre = item.Nombre;
+                        restaurante.Eslogan = item.Eslogan;
+                        restaurante.Imagen = item.Imagen;
+                        restaurante.Descripcion = item.Descripcion;
 
-                            restaurante.IdRestaurante = item.IdRestaurante;
-                            restaurante.Nombre = item.Nombre;
-                            restaurante.Eslogan = item.Eslogan;
-                            restaurante.Imagen = item.Imagen;
-                            restaurante.Descripcion = item.Descripcion;
-
-                            result.Objects.Add(restaurante);
-                        }
-                        result.Correct = true;
+                        result.Objects.Add(restaurante);
                     }
-                    else
-                    {
-                        result.Correct = false;
-                    }
+                    result.Correct = true;
+                }
+                else
+                {
+                    result.Correct = false;
                 }
             }
             catch (Exception ex)

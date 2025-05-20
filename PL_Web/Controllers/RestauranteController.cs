@@ -1,14 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DL;
+using Microsoft.AspNetCore.Mvc;
 
 namespace PL_Web.Controllers
 {
     public class RestauranteController : Controller
     {
+        private readonly BL.IRestaurante _Irestaurante;
+        public RestauranteController(BL.IRestaurante Irestaurante)
+        {
+            _Irestaurante = Irestaurante;
+        }
+
         [HttpGet]
         public IActionResult GetAll()
         {
             ML.Restaurante restaurante = new ML.Restaurante();
-            ML.Result result = BL.Restaurante.GetAll();
+            ML.Result result = _Irestaurante.GetAll();
 
             if (result.Correct)
             {
