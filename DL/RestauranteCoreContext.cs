@@ -21,9 +21,11 @@ public partial class RestauranteCoreContext : DbContext
     //public virtual DbSet<RestauranteGetByIdSP> RestauranteGetByIdSP { get; set; }
     //public virtual DbSet<RestauranteAddSP> RestauranteAddSP { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //CADENA DE CONEXIÓN EXPUESTA, se debe eliminar después de la inyección de dependencias, pero en este caso lo dejo de ejemplo
+
+    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=.; Database=RestauranteCore; TrustServerCertificate=True; User ID=sa; Password=pass@word1;");
+        => optionsBuilder.UseSqlServer("Server=.; Database=RestauranteCore; TrustServerCertificate=True; User ID=sa; Password=pass@word1;");*/
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

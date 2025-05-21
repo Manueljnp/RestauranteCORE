@@ -5,6 +5,7 @@ namespace PL_Web.Controllers
 {
     public class RestauranteController : Controller
     {
+        //10. Repetir el paso de la conexión, pero ahora referenciando a la INTERFAZ
         private readonly BL.IRestaurante _Irestaurante;
         public RestauranteController(BL.IRestaurante Irestaurante)
         {
@@ -15,7 +16,7 @@ namespace PL_Web.Controllers
         public IActionResult GetAll()
         {
             ML.Restaurante restaurante = new ML.Restaurante();
-            ML.Result result = _Irestaurante.GetAll();
+            ML.Result result = _Irestaurante.GetAll(); //11. Mandar a llamar el método desde la interfaz
 
             if (result.Correct)
             {
@@ -37,7 +38,7 @@ namespace PL_Web.Controllers
 
             if(idRestaurante > 0)
             {
-                ML.Result result = BL.Restaurante.GetById(idRestaurante.Value);
+                ML.Result result = _Irestaurante.GetById(idRestaurante.Value);
                 restaurante = (ML.Restaurante)result.Object;
             }
 
@@ -62,7 +63,7 @@ namespace PL_Web.Controllers
                 //Si es actualización conservar la imágen previa
                 if(restaurante.IdRestaurante != 0)
                 {
-                    var result = BL.Restaurante.GetById(restaurante.IdRestaurante);
+                    var result = _Irestaurante.GetById(restaurante.IdRestaurante);
                     if(result.Correct && result.Object != null)
                     {
                         var restauranteDB = (ML.Restaurante)result.Object;
@@ -73,11 +74,11 @@ namespace PL_Web.Controllers
 
             if (restaurante.IdRestaurante == 0)
             {
-                BL.Restaurante.Add(restaurante);
+                _Irestaurante.Add(restaurante);
             }
             else
             {
-                BL.Restaurante.Update(restaurante);
+                _Irestaurante.Update(restaurante);
             }
 
             return RedirectToAction("GetAll");
@@ -86,7 +87,7 @@ namespace PL_Web.Controllers
         [HttpGet]
         public IActionResult Delete(int idRestaurante)
         {
-            BL.Restaurante.Delete(idRestaurante);
+            _Irestaurante.Delete(idRestaurante);
             
             return RedirectToAction("GetAll");
         }
